@@ -4,13 +4,15 @@ module.exports = function check(str, bracketsConfig) {
     var arr = bracketsConfig[i];
     dictionary[ arr[0] ] = arr[1];
   }
-
   var bufferArr = [];
   for (var i = 0; i < str.length; i++) {
-    var char = str[i];
-    if(char in dictionary) {
+    var char = str[i],
+        lastElem = bufferArr[bufferArr.length-1];
+    if (char in dictionary && char != dictionary[char]) {
       bufferArr.push(char);
-    } else if ( char == dictionary[ bufferArr[bufferArr.length-1] ] ) {
+    } else if (char in dictionary && char == dictionary[char]) {
+      (char == lastElem) ? bufferArr.pop() : bufferArr.push(char);
+    } else if ( char == dictionary[lastElem] ) {
       bufferArr.pop();
     } else return false;
   }
